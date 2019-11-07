@@ -1,3 +1,12 @@
+/**
+ * StepperMotor.cpp
+ * 
+ * @author: Wilson Tovar <twilson@uninorte.edu.co> github.com/krthr
+ * @version: 0.1.0 6/11/2019
+ * 
+ * Every time measure is made using microseconds.
+ */
+
 #include "Arduino.h"
 #include "StepperMotor.h"
 
