@@ -24,10 +24,12 @@ public:
     int actual_steps;
     int interval;
     int state;
+    bool moving;
 
     void nextStep(unsigned long current_micros);
     void nextStep();
     void resetSteps();
+    void stopMotor();
 
     void setSteps(int steps);
     void setDir(int dir);
