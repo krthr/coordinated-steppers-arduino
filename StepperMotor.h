@@ -7,6 +7,7 @@ class StepperMotor
 {
 public:
     StepperMotor(int p, int dir, int en);
+    StepperMotor(int p, int dir, int en, int interval);
     StepperMotor() = default;
 
     int dir;
@@ -20,6 +21,7 @@ public:
 
     void setSteps(int steps);
     void setDir(int dir);
+    void setInterval(unsigned long interval);
 
 private:
     unsigned long last_micros;

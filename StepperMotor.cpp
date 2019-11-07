@@ -54,3 +54,8 @@ void StepperMotor::setSteps(int steps)
     this->total_steps = steps;
     this->actual_steps = 0;
 }
+
+void StepperMotor::setInterval(unsigned long interval)
+{
+    this->interval = interval;
+}
