@@ -47,6 +47,12 @@ void StepperMotor::nextStep(unsigned long current_micros)
     this->last_micros = current_micros;
 }
 
+void StepperMotor::nextStep()
+{
+    unsigned long current_micros = micros();
+    this->nextStep(current_micros);
+}
+
 void StepperMotor::resetSteps()
 {
     this->setSteps(0);

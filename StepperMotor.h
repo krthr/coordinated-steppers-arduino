@@ -26,6 +26,7 @@ public:
     int state;
 
     void nextStep(unsigned long current_micros);
+    void nextStep();
     void resetSteps();
 
     void setSteps(int steps);
