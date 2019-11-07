@@ -7,14 +7,13 @@
  * Every time measure is made using microseconds.
  */
 
-#define ENABLE_PIN  12
-#define P1      9
-#define P2      6
-#define P3      4
-#define DIR1    10
-#define DIR2    7
-#define DIR3    5
-
+#define ENABLE_PIN 12
+#define P1 9
+#define P2 6
+#define P3 4
+#define DIR1 10
+#define DIR2 7
+#define DIR3 5
 #define INPUT_SIZE 30
 
 #include "StepperMotor.h"
@@ -22,9 +21,9 @@
 unsigned long current_micros = 0;
 StepperMotor motors[3];
 
-void setup() 
+void setup()
 {
-  Serial.begin(9600); 
+  Serial.begin(9600);
 
   motors[0] = StepperMotor(P1, DIR1, ENABLE_PIN);
   motors[1] = StepperMotor(P2, DIR2, ENABLE_PIN);
@@ -36,9 +35,9 @@ void setup()
   }
 }
 
-void loop() 
+void loop()
 {
-  current_micros = micros(); 
+  current_micros = micros();
 
   for (int i = 0; i < 3; i++)
   {
