@@ -1,3 +1,4 @@
+
 /**
    Purpose: Controll multiple stepper motors.
 
@@ -7,106 +8,116 @@
    Every time measure is made using microseconds.
 */
 
-#define ENABLE_PIN 12
-#define P1 9
-#define P2 6
-#define P3 4
-#define DIR1 10
-#define DIR2 7
-#define DIR3 5
-#define INPUT_SIZE 30
-#define ld long double
-#define ul unsigned long
-
+#include "definitions.h"
 #include "StepperMotor.h"
 
-const ld R = 1;
-ul current_micros = 0;
+unsigned long current_micros = 0;
 StepperMotor motors[3];
 
-char input[INPUT_SIZE + 1];
+long long STEPS[][3]{
+    {3200, 3200, 3200},
+    {604, 8490, 8797},
+    {10432, 9907, 739},
+    {19962, 10487, 9448},
+    {9530, 579, 8708},
+    {7748, 12116, 19665},
+    {13881, 5345, 4367},
+    {43830, 19991, 23039},
+    {14024, 7296, 9983},
+    {21557, 3012, 16167}};
+
+int DIR[][3]{
+    {1, 1, 1},
+    {1, 0, 1},
+    {0, 1, 1},
+    {1, 0, 0},
+    {0, 1, 1},
+    {1, 1, 0},
+    {1, 0, 0},
+    {0, 1, 1},
+    {1, 0, 0},
+    {1, 1, 1}};
+
+int F[][3]{
+    {400, 400, 400},
+    {5825, 414, 400},
+    {400, 421, 5646},
+    {400, 761, 845},
+    {400, 6583, 437},
+    {1015, 649, 400},
+    {400, 1038, 1271},
+    {400, 876, 760},
+    {400, 768, 561},
+    {400, 2862, 533}
+
+};
+
+int POINTS = 9;
+int actualPoint = 0;
 
 void setup()
 {
+
   Serial.begin(9600);
 
-  motors[0] = StepperMotor(P1, DIR1, ENABLE_PIN);
-  motors[1] = StepperMotor(P2, DIR2, ENABLE_PIN);
-  motors[2] = StepperMotor(P3, DIR3, ENABLE_PIN);
+  Serial.println("Starting... \n");
 
-  motors[0].setSteps(13200);
-  motors[1].setSteps(4200);
-  motors[2].setSteps(8200);
+  motors[0] = StepperMotor(0, P1, DIR1, ENABLE_PIN);
+  motors[1] = StepperMotor(1, P2, DIR2, ENABLE_PIN);
+  motors[2] = StepperMotor(2, P3, DIR3, ENABLE_PIN);
 
+  /**
+  motors[0].setDir(LOW);
+  motors[0].setSteps(3200);
   motors[0].setInterval(400);
-  motors[1].setInterval(400);
-  motors[2].setInterval(400);
+*/
 
-  //motors[2].setDir(HIGH);
-  //motors[0].setDir(HIGH);
-  //motors[1].setDir(HIGH);
+  setAllMotors();
+
+  Serial.println("Hi! Welcome  \nAll motors are ready.\n");
 }
 
 void loop()
 {
-
   current_micros = micros();
 
-  handleSerial();
+  moveAllMotors();
+  /**
+  motors[0].nextStep(current_micros);
+ */
 
-  for (int i = 0; i < 3; i++)
+  if (!motors[0].moving && !motors[1].moving && !motors[2].moving && actualPoint < 1)
   {
-    motors[i].nextStep(current_micros);
+    Serial.println(actualPoint);
+    setAllMotors();
   }
 }
 
-void handleSerial()
+void moveAllMotors()
 {
-  while (Serial.available() > 0)
-  {
-    char c = Serial.read();
-
-    switch (c)
-    {
-    case 's':
-    {
-      // stop all: s
-      stopAll();
-      break;
-    }
-    }
-  }
+  motors[0].nextStep(current_micros);
+  motors[1].nextStep(current_micros);
+  motors[2].nextStep(current_micros);
 }
 
-void stopAll()
+/**
+ * Set the information of all motors.
+ */
+void setAllMotors()
 {
-  Serial.println("Stoping all motors.");
-  for (int i = 0; i < 3; i++)
-  {
-    motors[i].stopMotor();
-  }
+  setInfo(0);
+  setInfo(1);
+  setInfo(2);
+  actualPoint++;
 }
 
-ld l1(ld x, ld y, ld z)
+/**
+ * Set the info of a motor.
+ */
+void setInfo(int motor)
 {
-  return sqrt(
-      pow(x, 2) + pow(y - R, 2) + pow(z, 2));
-}
-
-ld l2(ld x, ld y, ld z)
-{
-  ld a = x - ((sqrt(3) / 2) * R);
-  ld b = y + (0.5 * R);
-
-  return sqrt(
-      pow(a, 2) + pow(b, 2) + pow(z, 2));
-}
-
-ld l3(ld x, ld y, ld z)
-{
-  ld a = x + (sqrt(3) / 2) * R;
-  ld b = y + (0.5 * R);
-
-  return sqrt(
-      pow(a, 2) + pow(b, 2) + pow(z, 2));
+  int i = motor - 1;
+  motors[i].setSteps(STEPS[actualPoint][i]);
+  motors[i].setDir(DIR[actualPoint][i]);
+  motors[i].setInterval(F[actualPoint][i]);
 }
