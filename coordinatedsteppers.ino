@@ -15,7 +15,6 @@ unsigned long current_micros = 0;
 StepperMotor motors[3];
 
 long long STEPS[][3]{
-    {3200, 3200, 3200},
     {604, 8490, 8797},
     {10432, 9907, 739},
     {19962, 10487, 9448},
@@ -27,7 +26,6 @@ long long STEPS[][3]{
     {21557, 3012, 16167}};
 
 int DIR[][3]{
-    {1, 1, 1},
     {1, 0, 1},
     {0, 1, 1},
     {1, 0, 0},
@@ -39,7 +37,6 @@ int DIR[][3]{
     {1, 1, 1}};
 
 int F[][3]{
-    {400, 400, 400},
     {5825, 414, 400},
     {400, 421, 5646},
     {400, 761, 845},
@@ -67,10 +64,10 @@ void setup()
   motors[2] = StepperMotor(2, P3, DIR3, ENABLE_PIN);
 
   /**
-  motors[0].setDir(LOW);
-  motors[0].setSteps(3200);
-  motors[0].setInterval(400);
-*/
+  motors[2].setDir(LOW);
+  motors[2].setSteps(3200);
+  motors[2].setInterval(400);
+  */
 
   setAllMotors();
 
@@ -86,7 +83,7 @@ void loop()
   motors[0].nextStep(current_micros);
  */
 
-  if (!motors[0].moving && !motors[1].moving && !motors[2].moving && actualPoint < 1)
+  if (!motors[0].moving && !motors[1].moving && !motors[2].moving && actualPoint < POINTS - 2)
   {
     Serial.println(actualPoint);
     setAllMotors();
@@ -114,9 +111,8 @@ void setAllMotors()
 /**
  * Set the info of a motor.
  */
-void setInfo(int motor)
+void setInfo(int i)
 {
-  int i = motor - 1;
   motors[i].setSteps(STEPS[actualPoint][i]);
   motors[i].setDir(DIR[actualPoint][i]);
   motors[i].setInterval(F[actualPoint][i]);
