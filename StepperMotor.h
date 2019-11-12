@@ -15,10 +15,11 @@
 class StepperMotor
 {
 public:
-    StepperMotor(int p, int dir, int en);
-    StepperMotor(int p, int dir, int en, int interval);
+    StepperMotor(int id, int p, int dir, int en);
+    StepperMotor(int id, int p, int dir, int en, int interval);
     StepperMotor() = default;
 
+    int id;
     int dir;
     int total_steps;
     int actual_steps;
@@ -31,7 +32,7 @@ public:
     void resetSteps();
     void stopMotor();
 
-    void setSteps(int steps);
+    void setSteps(long long steps);
     void setDir(int dir);
     void setInterval(unsigned long interval);
 
